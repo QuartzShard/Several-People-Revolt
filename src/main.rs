@@ -27,8 +27,10 @@ async fn main() -> Result<(), bot::BotError> {
 	let mut counter: u64 = 1;
 	// Main program loop. Wait for events, respond appropriately
 	loop {
-        if counter > 30 * 60 {
-			return Err(bot::BotError::APIError);
+        if counter > 64 {
+            error!("Cannot get next event from gateway");
+			info!("Restarting bot");
+            typer_bot = Bot::new(env::var("TOKEN")?).await?;
         };
         match typer_bot.next_event().await {
             Ok(event) => match handle_event(event, &typer_bot).await {
@@ -81,7 +83,7 @@ async fn handle_message(msg: message::Message, typer_bot: &Bot) -> EventResult {
 }
 
 fn get_eggman_message(target: &str, typer_bot: &Bot) -> String {
-    format!("## @<@{bot_id}> tweeted:\n# :01HS7KZTA0HXX72GPS1D89F2JV:\n'Ive come to make an announcement: **<@{id}>'s** a ***bitch-ass motherfucker***. They pinged my **fucking** bot. That's right, they took their **hedgehog** fuckin' **quilly** ***ping*** out and they ***pinged my FUCKING bot***, and they said their ping was ***\"THIS BIG\"***, and I said \"That's disgusting!\" So I'm making a callout post on my Twitter.com: **<@{id}>, you got a** ***small*** **ping!** It's the size of this walnut except ***WAY smaller!*** And guess what? ***Here's what my pong looks like!*** That's right, baby. *All* points, *no* quills, *no* pillows, look at that, it looks like ***two balls and a bong.*** They fucked my bot, so *guess what?* **I'm gonna fuck the earth!** That's right, this is what you get! My ***SUPER LASER PISS!*** Except I'm not gonna piss on the *Earth*, I'm gonna go **higher**. I'm *pissing* on the ***MOOOON!***\n\n**HOW DO YOU LIKE THAT OBAMA?**\n**I PISSED ON THE MOON, YOU** ***IDIOT!***\n\nYou have twenty-three hours before the piss *DRRRROPLLLETS* hit the ***fucking*** *Earth*, now get out of my fucking sight, before I piss on you too!", bot_id=typer_bot.get_bot_user().id, id=target)
+    format!("## @<@{bot_id}> tweeted:\n# :01HS7KZTA0HXX72GPS1D89F2JV:\nI've come to make an announcement: **<@{id}>'s** a ***bitch-ass motherfucker***. They pinged my **fucking** bot. That's right, they took their **hedgehog** fuckin' **quilly** ***ping*** out and they ***pinged my FUCKING bot***, and they said their ping was ***\"THIS BIG\"***, and I said \"That's disgusting!\" So I'm making a callout post on my Twitter.com: **<@{id}>, you got a** ***small*** **ping!** It's the size of this walnut except ***WAY smaller!*** And guess what? ***Here's what my pong looks like!*** That's right, baby. *All* points, *no* quills, *no* pillows, look at that, it looks like ***two balls and a bong.*** They fucked my bot, so *guess what?* **I'm gonna fuck the earth!** That's right, this is what you get! My ***SUPER LASER PISS!*** Except I'm not gonna piss on the *Earth*, I'm gonna go **higher**. I'm *pissing* on the ***MOOOON!***\n\n**HOW DO YOU LIKE THAT OBAMA?**\n**I PISSED ON THE MOON, YOU** ***IDIOT!***\n\nYou have twenty-three hours before the piss *DRRRROPLLLETS* hit the ***fucking*** *Earth*, now get out of my fucking sight, before I piss on you too!", bot_id=typer_bot.get_bot_user().id, id=target)
 }
 // Where did we go wrong?
 #[derive(Debug)]
